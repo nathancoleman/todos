@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/nathancoleman/todos/internal"
+	"github.com/nathancoleman/todos/internal/routes"
 )
 
 func main() {
-	if err := http.ListenAndServe(":8080", internal.Router()); err != nil {
+	if err := http.ListenAndServe(":8080", routes.Router()); err != nil {
 		slog.Warn("Stopped serving", "error", err.Error())
 		os.Exit(1)
 	}
