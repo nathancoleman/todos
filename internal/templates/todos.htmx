@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>TODOs</title>
+
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>TODOs</h1>
+    <ul hx-target="closest li" hx-swap="outerHTML swap:1s">
+        {{ range $todo := .TODOs }}
+            <li>
+                <input type="checkbox" {{ if $todo.Completed }}checked{{ end }} hx-post="/todos/{{ $todo.ID }}/toggle">
+                <span {{ if $todo.Completed }}style="text-decoration: line-through;"{{ end }}>{{ $todo.Title }}</span>
+                <button hx-delete="/todos/{{ $todo.ID }}">Delete</button>
+            </li>
+        {{ end }}
+    </ul>
+</body>
+</html>
