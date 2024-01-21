@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 
@@ -48,6 +50,36 @@ func getTODO(w http.ResponseWriter, r *http.Request) {
 
 	err = templates.ExecuteTemplate(w, "todo_list_item.htmx", todo)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func putTODO(w http.ResponseWriter, r *http.Request) {
+	todoID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	todo, err := api.GetTODO(todoID)
+	if err != nil {
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	body := struct {
+		Completed string `json:"completed"`
+	}{}
+
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	todo.Completed = strings.ToLower(body.Completed) == "on"
+
+	if err = templates.ExecuteTemplate(w, "todo_list_item.htmx", todo); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

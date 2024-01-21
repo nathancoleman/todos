@@ -16,6 +16,7 @@ func Router() http.Handler {
 		r.Get("/", getTODOs)
 		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", getTODO)
+			r.Put("/", putTODO)
 			r.Delete("/", deleteTODO)
 		})
 	})

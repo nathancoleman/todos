@@ -2,9 +2,13 @@
     <label class="form-check-label" {{ if .Completed }}style="text-decoration: line-through;"{{ end }}>
         <input type="checkbox" class="form-check-input"
                name="completed"
-               {{ if .Completed }}checked value="false"{{ else }}value="true"{{ end }}
-               hx-put="/todos/{{ .ID }}">
+               {{ if .Completed }}checked{{ end }}
+               hx-put="/todos/{{ .ID }}"
+               hx-include="closest li" hx-target="#todo-{{ .ID }}" hx-swap="outerHTML">
         {{ .Title }}
     </label>
+    <input type="hidden" name="id" value="{{ .ID }}">
+    <input type="hidden" name="title" value="{{ .Title }}">
+    <input type="hidden" name="userId" value="{{ .UserID }}">
     <button class="btn btn-sm btn-danger float-end" hx-delete="/todos/{{ .ID }}" hx-target="#todo-{{ .ID }}" hx-swap="delete">Delete</button>
 </li>
