@@ -21,13 +21,13 @@ func getTODOs(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("HX-Request") == "true" {
 
 	} else {
-		tData := struct {
+		data := struct {
 			TODOs []api.TODO
 		}{
 			TODOs: todos,
 		}
 
-		err = templates.ExecuteTemplate(w, "todos.html", tData)
+		err = templates.ExecuteTemplate(w, "todos.html", data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -70,6 +70,7 @@ func putTODO(w http.ResponseWriter, r *http.Request) {
 
 	body := struct {
 		Completed string `json:"completed"`
+		Title     string `json:"title"`
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -78,6 +79,7 @@ func putTODO(w http.ResponseWriter, r *http.Request) {
 	}
 
 	todo.Completed = strings.ToLower(body.Completed) == "on"
+	todo.Title = body.Title
 
 	if err = templates.ExecuteTemplate(w, "todo_list_item.htmx", todo); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
