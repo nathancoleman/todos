@@ -1,0 +1,5 @@
+<ul class="list-group">
+    {{ range $todo := .TODOs }}
+        {{ template "todo_list_item.htmx" $todo }}
+    {{ end }}
+</ul>

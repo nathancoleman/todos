@@ -9,23 +9,27 @@ import (
 	"github.com/nathancoleman/todos/internal/api"
 )
 
-func getTODOs(w http.ResponseWriter, _ *http.Request) {
+func getTODOs(w http.ResponseWriter, r *http.Request) {
 	todos, err := api.GetTODOs()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	tData := struct {
-		TODOs []api.TODO
-	}{
-		TODOs: todos,
-	}
+	if r.Header.Get("HX-Request") == "true" {
 
-	err = templates.ExecuteTemplate(w, "todos.htmx", tData)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	} else {
+		tData := struct {
+			TODOs []api.TODO
+		}{
+			TODOs: todos,
+		}
+
+		err = templates.ExecuteTemplate(w, "todos.html", tData)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
@@ -42,7 +46,7 @@ func getTODO(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = templates.ExecuteTemplate(w, "todo.htmx", todo)
+	err = templates.ExecuteTemplate(w, "todo_list_item.htmx", todo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

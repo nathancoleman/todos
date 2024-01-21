@@ -1,0 +1,10 @@
+<li class="list-group-item" id="todo-{{ .ID }}">
+    <label class="form-check-label" {{ if .Completed }}style="text-decoration: line-through;"{{ end }}>
+        <input type="checkbox" class="form-check-input"
+               name="completed"
+               {{ if .Completed }}checked value="false"{{ else }}value="true"{{ end }}
+               hx-put="/todos/{{ .ID }}">
+        {{ .Title }}
+    </label>
+    <button class="btn btn-sm btn-danger float-end" hx-delete="/todos/{{ .ID }}" hx-target="#todo-{{ .ID }}" hx-swap="delete">Delete</button>
+</li>
